@@ -126,6 +126,50 @@ parameter."
               (format " { %s }"
                       (mapconcat #'graphql-encode fields " ")))))))))
 
+(defun graphql--genform-operation (args kind)
+  (pcase args
+    (`(,graph)
+     `(graphql-encode '(,kind ,graph)))
+
+    (`((,name) ,graph)
+     `(graphql-encode '(,kind :op-name ,name
+                              ,graph)))
+    (`((,name ,parameters) ,graph)
+     `(graphql-encode '(,kind :op-name ,name
+                              :op-params ,parameters
+                              ,graph)))
+
+    (_ (error "bad form"))))
+
+(defmacro graphql-query (&rest args)
+  "Construct a Query object.
+Calling pattern:
+
+  (fn GRAPH) := Just encode GRAPH as a Query.
+
+  (fn (NAME) GRAPH) := Give the Query a NAME.
+
+  (fn (NAME PARAMETERS) GRAPH) := Give the Query PARAMETERS;
+                                  see below.
+
+Parameters are formatted as defined by
+`graphql--encode-parameter-spec'."
+  (graphql--genform-operation args 'query))
+
+(defmacro graphql-mutation (&rest args)
+  "Construct a Mutation object.
+Calling pattern:
+
+  (fn GRAPH) := Just encode GRAPH as a Mutation.
+
+  (fn (NAME) GRAPH) := Give the Mutation a NAME.
+
+  (fn (NAME PARAMETERS) GRAPH) := Give the Mutation PARAMETERS;
+                                  see below.
+
+Parameters are formatted as defined by
+`graphql--encode-parameter-spec'."
+  (graphql--genform-operation args 'query))
 
 (provide 'graphql)
 ;;; graphql.el ends here

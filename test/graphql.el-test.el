@@ -45,4 +45,9 @@
                                                         (content . HOORAY))))))
                    "addReaction(input:{subjectId:\"MDU6SXNzdWUxNzc2MzA3Mjk=\",content:HOORAY})")))
 
+(ert-deftest encode-query ()
+  (string= (graphql-query (test ((ep Episode !)
+                                 (review ReviewInput ! . "fifty")))
+                          (repository))
+           "query test($ep: Episode!,$review: ReviewInput! = \"fifty\") { repository }"))
 ;;; graphql.el-test.el ends here
