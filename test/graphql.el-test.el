@@ -4,21 +4,21 @@
   (should (string= (graphql-encode
                     '(query
                       hello-world))
-                   "query { hello-world }"))
+                   "query{hello-world}"))
 
   (should (string= (graphql-encode
                     '(query
                       :arguments ((one . 1)
                                   (two . "2"))
                       hello-world))
-                   "query(one:1,two:\"2\") { hello-world }"))
+                   "query(one:1,two:\"2\"){hello-world}"))
 
   (should (string= (graphql-encode
                     '(query
                       :arguments ((one . ($ variableForOne))
                                   (two . "2"))
                       hello-world))
-                   "query(one:$variableForOne,two:\"2\") { hello-world }")))
+                   "query(one:$variableForOne,two:\"2\"){hello-world}")))
 
 (ert-deftest encode-recursive ()
   (should (string= (graphql-encode
@@ -26,7 +26,7 @@
                       (repository
                        :arguments ((owner . "my-owner")
                                    (name . "my-repo-name")))))
-                   "query { repository(owner:\"my-owner\",name:\"my-repo-name\") }"))
+                   "query{repository(owner:\"my-owner\",name:\"my-repo-name\")}"))
 
   (should (string= (graphql-encode
                     '(query
@@ -37,8 +37,8 @@
                         :arguments ((first . 20))
                         (edges (node number title url))))))
                    (concat
-                    "query { repository(owner:\"my-owner\",name:\"my-repo-name\") "
-                    "{ issues(first:20) { edges { node { number title url } } } } }")))
+                    "query{repository(owner:\"my-owner\",name:\"my-repo-name\")"
+                    "{issues(first:20){edges{node{number title url}}}}}")))
 
   (should (string= (graphql-encode
                     '(addReaction :arguments ((input . ((subjectId . "MDU6SXNzdWUxNzc2MzA3Mjk=")
@@ -46,8 +46,11 @@
                    "addReaction(input:{subjectId:\"MDU6SXNzdWUxNzc2MzA3Mjk=\",content:HOORAY})")))
 
 (ert-deftest encode-query ()
-  (string= (graphql-query (test ((ep Episode !)
-                                 (review ReviewInput ! . "fifty")))
-                          (repository))
-           "query test($ep: Episode!,$review: ReviewInput! = \"fifty\") { repository }"))
+  (should (string= (graphql-query (test)
+                                  (repository))
+                   "query test { repository }"))
+  (should (string= (graphql-query (test ((ep Episode !)
+                                         (review ReviewInput ! . 50)))
+                                  (repository :arguments ((hello . ($ ep)))))
+                   "query test($ep:Episode!,$review:ReviewInput!=50) { repository(hello:$ep) }"))  )
 ;;; graphql.el-test.el ends here

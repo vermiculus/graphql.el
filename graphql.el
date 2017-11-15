@@ -82,12 +82,12 @@ parameter."
                                (car last)
                                (cdr last))))
 (defun graphql--encode-parameter (name type &optional required default)
-  (format "$%s: %s%s%s"
+  (format "$%s:%s%s%s"
           (symbol-name name)
           (symbol-name type)
           (if required "!" "")
           (if default
-              (concat " = " (graphql--encode-argument-value default))
+              (concat "=" (graphql--encode-argument-value default))
             "")))
 
 (defun graphql--get-keys (g)
@@ -123,7 +123,7 @@ parameter."
               (format "(%s)"
                       (mapconcat #'graphql--encode-parameter-spec params ",")))
             (when fields
-              (format " { %s }"
+              (format "{%s}"
                       (mapconcat #'graphql-encode fields " ")))))))))
 
 (defun graphql--genform-operation (args kind)
