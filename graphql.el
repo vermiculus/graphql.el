@@ -61,6 +61,34 @@
     (number-to-string value))
    (t
     (graphql--encode value))))
+(defun graphql--encode-parameter-spec (spec)
+  "Encode a parameter SPEC.
+SPEC is expected to be of the following form:
+
+   (NAME TYPE [REQUIRED] . [DEFAULT])
+
+NAME is the name of the parameter.
+
+TYPE is the parameter's type.
+
+A non-nil value for REQUIRED will indicate the parameter is
+required.  A value of `!' is recommended.
+
+A non-nil value for DEFAULT will provide a default value for the
+parameter."
+  (let ((last (last spec)))
+    (graphql--encode-parameter (car spec)
+                               (cadr spec)
+                               (car last)
+                               (cdr last))))
+(defun graphql--encode-parameter (name type &optional required default)
+  (format "$%s: %s%s%s"
+          (symbol-name name)
+          (symbol-name type)
+          (if required "!" "")
+          (if default
+              (concat " = " (graphql--encode-argument-value default))
+            "")))
 
 (defun graphql--get-keys (g)
   (let (graph keys)
@@ -80,6 +108,7 @@
         (`(,keys ,graph)
          (let ((object (car graph))
                (name (alist-get :op-name keys))
+               (params (alist-get :op-params keys))
                (arguments (alist-get :arguments keys))
                (fields (cdr graph)))
            (concat
@@ -90,6 +119,9 @@
                       (mapconcat #'graphql--encode-argument-spec arguments ",")))
             (when name
               (format " %S" name))
+            (when params
+              (format "(%s)"
+                      (mapconcat #'graphql--encode-parameter-spec params ",")))
             (when fields
               (format " { %s }"
                       (mapconcat #'graphql-encode fields " ")))))))))
