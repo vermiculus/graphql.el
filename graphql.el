@@ -76,21 +76,21 @@
       (graphql--encode-list g)
       (pcase (graphql--get-keys g)
         (`(,keys ,graph)
-         (let ((root (car graph))
+         (let ((object (car graph))
                (name (alist-get :name keys))
                (arguments (alist-get :arguments keys))
-               (rest (cdr graph)))
+               (fields (cdr graph)))
            (concat
-            (symbol-name root)
+            (symbol-name object)
             (when arguments
               ;; Format arguments "key:value, ..."
               (format "(%s)"
                       (mapconcat #'graphql--encode-parameter-pair arguments ",")))
             (when name
               (format " %S") name)
-            (when rest
+            (when fields
               (format " { %s }"
-                      (mapconcat #'graphql--encode rest " ")))))))))
+                      (mapconcat #'graphql--encode fields " ")))))))))
 
 (defun graphql-encode (g)
   "Encode G as a GraphQL string."
