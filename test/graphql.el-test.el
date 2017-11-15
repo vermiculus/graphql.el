@@ -36,9 +36,7 @@
                        (issues
                         :arguments ((first . 20))
                         (edges (node number title url))))))
-                   (concat
-                    "query{repository(owner:\"my-owner\",name:\"my-repo-name\")"
-                    "{issues(first:20){edges{node{number title url}}}}}")))
+                   "query{repository(owner:\"my-owner\",name:\"my-repo-name\"){issues(first:20){edges{node{number title url}}}}}"))
 
   (should (string= (graphql-encode
                     '(addReaction :arguments ((input . ((subjectId . "MDU6SXNzdWUxNzc2MzA3Mjk=")
@@ -52,7 +50,10 @@
   (should (string= (graphql-query (test ((ep Episode !)
                                          (review ReviewInput ! . 50)))
                                   (repository :arguments ((hello . ($ ep)))))
-                   "query test($ep:Episode!,$review:ReviewInput!=50){repository(hello:$ep)}"))  )
+                   "query test($ep:Episode!,$review:ReviewInput!=50){repository(hello:$ep)}"))
+  (should (string= (graphql-mutation (testMutation ((ep Episode . ((complex . params)))))
+                                     (change thing))
+                   "mutation testMutation($ep:Episode!){change{thing}}")))
 
 (ert-deftest encode-complicated ()
   (should (string= (graphql-query (test ((ep Episode . ((complex . params)

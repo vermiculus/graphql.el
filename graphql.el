@@ -171,7 +171,7 @@ Calling pattern:
 
 Parameters are formatted as defined by
 `graphql--encode-parameter-spec'."
-  (graphql--genform-operation args 'query))
+  (graphql--genform-operation args 'mutation))
 
 (provide 'graphql)
 ;;; graphql.el ends here
