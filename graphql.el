@@ -86,11 +86,10 @@
               ;; Format arguments "key:value, ..."
               (format "(%s)"
                       (mapconcat #'graphql--encode-parameter-pair arguments ",")))
-            (when (or name rest) " ")
             (when name
-              (format "%S ") name)
+              (format " %S") name)
             (when rest
-              (format "{ %s }"
+              (format " { %s }"
                       (if (listp rest)
                           (mapconcat #'graphql--encode rest " ")
                         (graphql--encode rest))))))))))
