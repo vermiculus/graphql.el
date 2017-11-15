@@ -72,7 +72,7 @@
         (push (pop g) graph)))
     (list keys (nreverse graph))))
 
-(defun graphql--encode (g)
+(defun graphql-encode (g)
   "Encode G as a GraphQL string."
   (or (graphql--encode-atom g)
       (graphql--encode-list g)
@@ -92,14 +92,8 @@
               (format " %S" name))
             (when fields
               (format " { %s }"
-                      (mapconcat #'graphql--encode fields " ")))))))))
+                      (mapconcat #'graphql-encode fields " ")))))))))
 
-(defun graphql-encode (g)
-  "Encode G as a GraphQL string."
-  (let ((s (graphql--encode g)))
-    ;; clean up
-    (set-text-properties 0 (length s) nil s)
-    s))
 
 (provide 'graphql)
 ;;; graphql.el ends here
