@@ -89,7 +89,7 @@
               (format "(%s)"
                       (mapconcat #'graphql--encode-parameter-pair arguments ",")))
             (when name
-              (format " %S") name)
+              (format " %S" name))
             (when fields
               (format " { %s }"
                       (mapconcat #'graphql--encode fields " ")))))))))
