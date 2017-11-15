@@ -43,9 +43,9 @@
 (defun graphql--encode-list (l)
   (when (and (consp l) (consp (car l)))
     (mapconcat #'graphql--encode l " ")))
-(defun graphql--encode-parameter-pair (pair)
-  (graphql--encode-parameter (car pair) (cdr pair)))
-(defun graphql--encode-parameter (key value)
+(defun graphql--encode-argument-pair (pair)
+  (graphql--encode-argument (car pair) (cdr pair)))
+(defun graphql--encode-argument (key value)
   (format "%s:%s"
           key
           (cond
@@ -54,7 +54,7 @@
            ((eq '$ (car-safe value))
             (format "$%s" (cadr value)))
            ((listp value)
-            (format "{%s}" (mapconcat #'graphql--encode-parameter-pair value ",")))
+            (format "{%s}" (mapconcat #'graphql--encode-argument-pair value ",")))
            ((stringp value)
             (format "\"%s\"" value))
            ((numberp value)
@@ -87,7 +87,7 @@
             (when arguments
               ;; Format arguments "key:value, ..."
               (format "(%s)"
-                      (mapconcat #'graphql--encode-parameter-pair arguments ",")))
+                      (mapconcat #'graphql--encode-argument-pair arguments ",")))
             (when name
               (format " %S" name))
             (when fields
