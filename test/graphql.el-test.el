@@ -8,10 +8,10 @@
 
   (should (string= (graphql-encode
                     '(query
-                      :arguments ((one . "1")
+                      :arguments ((one . 1)
                                   (two . "2"))
                       hello-world))
-                   "query(one:\"1\",two:\"2\") { hello-world }"))
+                   "query(one:1,two:\"2\") { hello-world }"))
 
   (should (string= (graphql-encode
                     '(query

@@ -46,21 +46,21 @@
 (defun graphql--encode-argument-spec (spec)
   (graphql--encode-argument (car spec) (cdr spec)))
 (defun graphql--encode-argument (key value)
-  (format "%s:%s"
-          key
-          (cond
-           ((symbolp value)
-            (symbol-name value))
-           ((eq '$ (car-safe value))
-            (format "$%s" (cadr value)))
-           ((listp value)
-            (format "{%s}" (mapconcat #'graphql--encode-argument-pair value ",")))
-           ((stringp value)
-            (format "\"%s\"" value))
-           ((numberp value)
-            value)
-           (t
-            (graphql--encode value)))))
+  (format "%s:%s" key (graphql--encode-argument-value value)))
+(defun graphql--encode-argument-value (value)
+  (cond
+   ((symbolp value)
+    (symbol-name value))
+   ((eq '$ (car-safe value))
+    (format "$%s" (cadr value)))
+   ((listp value)
+    (format "{%s}" (mapconcat #'graphql--encode-argument-spec value ",")))
+   ((stringp value)
+    (format "\"%s\"" value))
+   ((numberp value)
+    (number-to-string value))
+   (t
+    (graphql--encode value))))
 
 (defun graphql--get-keys (g)
   (let (graph keys)
