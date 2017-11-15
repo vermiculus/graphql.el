@@ -113,12 +113,12 @@ parameter."
                (fields (cdr graph)))
            (concat
             (symbol-name object)
+            (when name
+              (format " %S" name))
             (when arguments
               ;; Format arguments "key:value, ..."
               (format "(%s)"
                       (mapconcat #'graphql--encode-argument-spec arguments ",")))
-            (when name
-              (format " %S" name))
             (when params
               (format "(%s)"
                       (mapconcat #'graphql--encode-parameter-spec params ",")))
