@@ -76,11 +76,15 @@ required.  A value of `!' is recommended.
 
 A non-nil value for DEFAULT will provide a default value for the
 parameter."
-  (let ((last (last spec)))
-    (graphql--encode-parameter (car spec)
-                               (cadr spec)
-                               (car last)
-                               (cdr last))))
+  (if (eq (last spec) (nthcdr 2 spec))
+      (graphql--encode-parameter (nth 0 spec)
+                                 (nth 1 spec)
+                                 (car (last spec))
+                                 (cdr (last spec)))
+    (graphql--encode-parameter (nth 0 spec)
+                               (nth 1 spec)
+                               nil
+                               (nthcdr 2 spec))))
 (defun graphql--encode-parameter (name type &optional required default)
   (format "$%s:%s%s%s"
           (symbol-name name)
