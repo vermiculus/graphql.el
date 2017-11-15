@@ -90,9 +90,7 @@
               (format " %S") name)
             (when rest
               (format " { %s }"
-                      (if (listp rest)
-                          (mapconcat #'graphql--encode rest " ")
-                        (graphql--encode rest))))))))))
+                      (mapconcat #'graphql--encode rest " ")))))))))
 
 (defun graphql-encode (g)
   "Encode G as a GraphQL string."
