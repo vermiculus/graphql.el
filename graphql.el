@@ -51,6 +51,8 @@
           (cond
            ((symbolp value)
             (symbol-name value))
+           ((eq '$ (car-safe value))
+            (format "$%s" (cadr value)))
            ((listp value)
             (format "{%s}" (mapconcat #'graphql--encode-parameter-pair value ",")))
            ((stringp value)
