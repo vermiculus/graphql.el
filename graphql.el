@@ -29,20 +29,17 @@
 
 (require 'pcase)
 
-(defun graphql--encode-atom (g)
+(defun graphql--encode-object (obj)
   (cond
-   ((stringp g)
-    g)
-   ((symbolp g)
-    (symbol-name g))
-   ((numberp g)
-    (number-to-string g))
-   ((and (consp g)
-         (not (consp (cdr g))))
-    (symbol-name (car g)))))
-(defun graphql--encode-list (l)
-  (when (and (consp l) (consp (car l)))
-    (mapconcat #'graphql--encode l " ")))
+   ((stringp obj)
+    obj)
+   ((symbolp obj)
+    (symbol-name obj))
+   ((numberp obj)
+    (number-to-string obj))
+   ((and (consp obj)
+         (not (consp (cdr obj))))
+    (symbol-name (car obj)))))
 (defun graphql--encode-argument-spec (spec)
   (graphql--encode-argument (car spec) (cdr spec)))
 (defun graphql--encode-argument (key value)
@@ -95,40 +92,41 @@ parameter."
             "")))
 
 (defun graphql--get-keys (g)
-  (let (graph keys)
-    (while g
-      (if (keywordp (car g))
-          (let* ((param (pop g))
-                 (value (pop g)))
-            (push (cons param value) keys))
-        (push (pop g) graph)))
-    (list keys (nreverse graph))))
+  (or (and (not (consp g))
+           (list nil g))
+      (let (graph keys)
+        (while g
+          (if (keywordp (car g))
+              (let* ((param (pop g))
+                     (value (pop g)))
+                (push (cons param value) keys))
+            (push (pop g) graph)))
+        (list keys (nreverse graph)))))
 
 (defun graphql-encode (g)
   "Encode G as a GraphQL string."
-  (or (graphql--encode-atom g)
-      (graphql--encode-list g)
-      (pcase (graphql--get-keys g)
-        (`(,keys ,graph)
-         (let ((object (car graph))
-               (name (alist-get :op-name keys))
-               (params (alist-get :op-params keys))
-               (arguments (alist-get :arguments keys))
-               (fields (cdr graph)))
-           (concat
-            (symbol-name object)
-            (when name
-              (format " %S" name))
-            (when arguments
-              ;; Format arguments "key:value, ..."
-              (format "(%s)"
-                      (mapconcat #'graphql--encode-argument-spec arguments ",")))
-            (when params
-              (format "(%s)"
-                      (mapconcat #'graphql--encode-parameter-spec params ",")))
-            (when fields
-              (format "{%s}"
-                      (mapconcat #'graphql-encode fields " ")))))))))
+  (pcase (graphql--get-keys g)
+    (`(,keys ,graph)
+     (let ((object (or (car-safe graph) graph))
+           (name (alist-get :op-name keys))
+           (params (alist-get :op-params keys))
+           (arguments (alist-get :arguments keys))
+           ;; TODO `:as' keyword for http://graphql.org/learn/queries/#aliases
+           (fields (cdr-safe graph)))
+       (concat
+        (graphql--encode-object object)
+        (when name
+          (format " %S" name))
+        (when arguments
+          ;; Format arguments "key:value, ..."
+          (format "(%s)"
+                  (mapconcat #'graphql--encode-argument-spec arguments ",")))
+        (when params
+          (format "(%s)"
+                  (mapconcat #'graphql--encode-parameter-spec params ",")))
+        (when fields
+          (format "{%s}"
+                  (mapconcat #'graphql-encode fields " "))))))))
 
 (defun graphql--genform-operation (args kind)
   (pcase args
