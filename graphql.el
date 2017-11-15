@@ -79,7 +79,7 @@
       (pcase (graphql--get-keys g)
         (`(,keys ,graph)
          (let ((object (car graph))
-               (name (alist-get :name keys))
+               (name (alist-get :op-name keys))
                (arguments (alist-get :arguments keys))
                (fields (cdr graph)))
            (concat
