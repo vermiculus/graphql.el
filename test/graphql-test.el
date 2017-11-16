@@ -1,4 +1,6 @@
-;;; graphql.el-test.el --- Tests for graphql.el
+;;; graphql-test.el --- Tests for graphql.el
+
+(require 'graphql)
 
 (ert-deftest encode-basic ()
   (should (string= (graphql-encode
@@ -62,4 +64,4 @@
                                          (review ReviewInput ! . 50)))
                                   (repository :arguments ((hello . ($ ep)))))
                    "query test($ep:Episode={complex:params,with:\"values\",like:50},$review:ReviewInput!=50){repository(hello:$ep)}")))
-;;; graphql.el-test.el ends here
+;;; graphql-test.el ends here
