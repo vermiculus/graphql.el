@@ -46,6 +46,8 @@
                    "addReaction(input:{subjectId:\"MDU6SXNzdWUxNzc2MzA3Mjk=\",content:HOORAY})")))
 
 (ert-deftest encode-query ()
+  (should (string= (graphql-query (repository))
+                   "query{repository}"))
   (should (string= (graphql-query (test)
                                   (repository))
                    "query test{repository}"))
