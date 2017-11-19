@@ -5,6 +5,7 @@
 ;; Author: Sean Allred <code@seanallred.com>
 ;; Keywords: hypermedia, tools, lisp
 ;; Package-Version: 0
+;; Package-Requires: ((emacs "25"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -73,6 +74,11 @@ required.  A value of `!' is recommended.
 
 A non-nil value for DEFAULT will provide a default value for the
 parameter."
+  ;; Unfortunately can't use `pcase' here because the first DEFAULT
+  ;; value (in the case of a complex value) might be misunderstood as
+  ;; the value for REQUIRED.  We need to know if the third cons is the
+  ;; very last one; not just that the list has at least three
+  ;; elements.
   (if (eq (last spec) (nthcdr 2 spec))
       (graphql--encode-parameter (nth 0 spec)
                                  (nth 1 spec)
