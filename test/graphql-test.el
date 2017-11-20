@@ -1,6 +1,22 @@
 ;;; graphql-test.el --- Tests for graphql.el
 
 (require 'graphql)
+(require 'package)
+
+(ert-deftest correct-tag ()
+  (should
+   (let* ((root "graphql.el")
+          (root (thread-last root
+                  (locate-dominating-file default-directory)
+                  (expand-file-name root))))
+     (version-list-=
+      (package-desc-version
+       (with-temp-buffer
+         (insert-file-contents-literally root)
+         (package-buffer-info)))
+      (with-temp-buffer
+        (when (= 0 (call-process "git" nil t nil "describe" "--tags"))
+          (version-to-list (car (split-string (buffer-string) "-")))))))))
 
 (ert-deftest encode-basic ()
   (should (string= (graphql-encode
