@@ -134,6 +134,24 @@ parameter."
           (format "{%s}"
                   (mapconcat #'graphql-encode fields " "))))))))
 
+(defun graphql-simplify-response-edges (data)
+  "Simplify DATA to collapse edges into their nodes."
+  (pcase data
+    ;; When we encounter a collection of edges, simplify those edges
+    ;; into their nodes
+    (`(,object (edges . ,edges))
+     (cons object (mapcar #'graphql-simplify-response-edges
+                          (mapcar (lambda (edge) (alist-get 'node edge))
+                                  edges))))
+    ;; When we encounter a plain cons cell (not a list), let it pass
+    (`(,key . ,(and value (guard (not (consp value)))))
+     data)
+    ;; symbols should pass unaltered
+    (`,(and symbol (guard (symbolp symbol)))
+     data)
+    ;; everything else should be mapped
+    (_ (mapcar #'graphql-simplify-response-edges data))))
+
 (defun graphql--genform-operation (args kind)
   (pcase args
     (`(,graph)
