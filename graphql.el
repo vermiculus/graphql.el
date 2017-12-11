@@ -61,7 +61,7 @@
    ((numberp value)
     (number-to-string value))
    (t
-    (graphql--encode value))))
+    (graphql-encode value))))
 
 (defun graphql--encode-parameter-spec (spec)
   "Encode a parameter SPEC.
