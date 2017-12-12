@@ -58,6 +58,8 @@
     (format "{%s}" (mapconcat #'graphql--encode-argument-spec value ",")))
    ((stringp value)
     (format "\"%s\"" value))
+   ((vectorp value)
+    (format "[%s]" (mapconcat #'graphql-encode value ",")))
    ((numberp value)
     (number-to-string value))
    (t
