@@ -41,10 +41,13 @@
    ((and (consp obj)
          (not (consp (cdr obj))))
     (symbol-name (car obj)))))
+
 (defun graphql--encode-argument-spec (spec)
   (graphql--encode-argument (car spec) (cdr spec)))
+
 (defun graphql--encode-argument (key value)
   (format "%s:%s" key (graphql--encode-argument-value value)))
+
 (defun graphql--encode-argument-value (value)
   (cond
    ((symbolp value)
@@ -58,7 +61,8 @@
    ((numberp value)
     (number-to-string value))
    (t
-    (graphql--encode value))))
+    (graphql-encode value))))
+
 (defun graphql--encode-parameter-spec (spec)
   "Encode a parameter SPEC.
 SPEC is expected to be of the following form:
@@ -88,6 +92,7 @@ parameter."
                                (nth 1 spec)
                                nil
                                (nthcdr 2 spec))))
+
 (defun graphql--encode-parameter (name type &optional required default)
   (format "$%s:%s%s%s"
           (symbol-name name)
