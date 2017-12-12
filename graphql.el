@@ -150,10 +150,10 @@ parameter."
                                   edges))))
     ;; When we encounter a plain cons cell (not a list), let it pass
     (`(,key . ,(and value (guard (not (consp value)))))
-     data)
+     (cons key value))
     ;; symbols should pass unaltered
     (`,(and symbol (guard (symbolp symbol)))
-     data)
+     symbol)
     ;; everything else should be mapped
     (_ (mapcar #'graphql-simplify-response-edges data))))
 
