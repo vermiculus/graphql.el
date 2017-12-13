@@ -162,15 +162,15 @@ parameter."
 (defun graphql--genform-operation (args kind)
   (pcase args
     (`(,graph)
-     `(graphql-encode '(,kind ,graph)))
+     `(graphql-encode '(,kind ,@graph)))
 
     (`((,name) ,graph)
      `(graphql-encode '(,kind :op-name ,name
-                              ,graph)))
+                              ,@graph)))
     (`((,name ,parameters) ,graph)
      `(graphql-encode '(,kind :op-name ,name
                               :op-params ,parameters
-                              ,graph)))
+                              ,@graph)))
 
     (_ (error "bad form"))))
 
