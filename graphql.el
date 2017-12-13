@@ -160,47 +160,30 @@ parameter."
 
 (defun graphql--genform-operation (args kind)
   (pcase args
-    (`(,graph)
-     `(graphql-encode '(,kind ,@graph)))
-
-    (`((,name) ,graph)
-     `(graphql-encode '(,kind :op-name ,name
-                              ,@graph)))
-    (`((,name ,parameters) ,graph)
+    (`(,name ,parameters ,graph)
      `(graphql-encode '(,kind :op-name ,name
                               :op-params ,parameters
                               ,@graph)))
+
+    (`(,name ,graph)
+     `(graphql-encode '(,kind :op-name ,name
+                              ,@graph)))
+
+    (`(,graph)
+     `(graphql-encode '(,kind ,@graph)))
 
     (_ (error "bad form"))))
 
 (defmacro graphql-query (&rest args)
   "Construct a Query object.
-Calling pattern:
 
-  (fn GRAPH) := Just encode GRAPH as a Query.
-
-  (fn (NAME) GRAPH) := Give the Query a NAME.
-
-  (fn (NAME PARAMETERS) GRAPH) := Give the Query PARAMETERS;
-                                  see below.
-
-Parameters are formatted as defined by
-`graphql--encode-parameter-spec'."
+\(fn [NAME] [(PARAMETER-SPEC...)] GRAPH)"
   (graphql--genform-operation args 'query))
 
 (defmacro graphql-mutation (&rest args)
   "Construct a Mutation object.
-Calling pattern:
 
-  (fn GRAPH) := Just encode GRAPH as a Mutation.
-
-  (fn (NAME) GRAPH) := Give the Mutation a NAME.
-
-  (fn (NAME PARAMETERS) GRAPH) := Give the Mutation PARAMETERS;
-                                  see below.
-
-Parameters are formatted as defined by
-`graphql--encode-parameter-spec'."
+\(fn [NAME] [(PARAMETER-SPEC...)] GRAPH)"
   (graphql--genform-operation args 'mutation))
 
 (provide 'graphql)
