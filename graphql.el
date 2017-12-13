@@ -150,7 +150,7 @@ parameter."
                           (mapcar (lambda (edge) (alist-get 'node edge))
                                   edges))))
     ;; When we encounter a plain cons cell (not a list), let it pass
-    (`(,key . ,(and value (guard (not (consp value)))))
+    (`(,(and key (guard (not (consp key)))) . ,(and value (guard (not (consp value)))))
      (cons key value))
     ;; symbols should pass unaltered
     (`,(and symbol (guard (symbolp symbol)))
