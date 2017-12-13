@@ -124,14 +124,13 @@ parameter."
            (name (alist-get :op-name keys))
            (params (alist-get :op-params keys))
            (arguments (alist-get :arguments keys))
-           ;; TODO `:as' keyword for http://graphql.org/learn/queries/#aliases
            (fields (cdr-safe graph)))
        (concat
         (graphql--encode-object object)
         (when name
           (format " %S" name))
         (when arguments
-          ;; Format arguments "key:value, ..."
+          ;; Format arguments "key:value,key:value,..."
           (format "(%s)"
                   (mapconcat #'graphql--encode-argument-spec arguments ",")))
         (when params
