@@ -49,6 +49,17 @@
   (format "%s:%s" key (graphql--encode-argument-value value)))
 
 (defun graphql--encode-argument-value (value)
+  "Encode an argument value VALUE.
+VALUE is expected to be one of the following:
+
+* a symbol
+* a 'variable', i.e. \\='($ variableName)
+* an object (as a list)
+* a string
+* a vector of values (e.g., symbols)
+* a number
+* something encode-able by `graphql-encode'
+"
   (cond
    ((symbolp value)
     (symbol-name value))
@@ -105,6 +116,9 @@ parameter."
             "")))
 
 (defun graphql--get-keys (g)
+  "Get the keyword arguments from a graph G.
+Returns a list where the first element is a plist of arguments
+and the second is a 'clean' copy of G."
   (or (and (not (consp g))
            (list nil g))
       (let (graph keys)
@@ -117,7 +131,7 @@ parameter."
         (list keys (nreverse graph)))))
 
 (defun graphql-encode (g)
-  "Encode G as a GraphQL string."
+  "Encode graph G as a GraphQL string."
   (pcase (graphql--get-keys g)
     (`(,keys ,graph)
      (let ((object (or (car-safe graph) graph))
