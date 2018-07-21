@@ -1,3 +1,4 @@
+(require 'subr-x)
 (require 'json)
 (require 'ghub)
 (require 'graphql)
