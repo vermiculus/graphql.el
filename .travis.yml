@@ -25,3 +25,6 @@ script:
   - make test-ert
   - make compile
   - make test-ert
+  # linting
+  - make lint-package-lint
+  - make lint-checkdoc
