@@ -4,6 +4,7 @@
 
 ;; Author: Sean Allred <code@seanallred.com>
 ;; Keywords: hypermedia, tools, lisp
+;; Homepage: https://github.com/vermiculus/graphql.el
 ;; Package-Version: 0
 ;; Package-Requires: ((emacs "25"))
 
@@ -31,6 +32,7 @@
 (require 'pcase)
 
 (defun graphql--encode-object (obj)
+  "Encode OBJ as a GraphQL string."
   (cond
    ((stringp obj)
     obj)
@@ -43,9 +45,12 @@
     (symbol-name (car obj)))))
 
 (defun graphql--encode-argument-spec (spec)
+  "Encode an argument spec SPEC.
+SPEC is of the form..."
   (graphql--encode-argument (car spec) (cdr spec)))
 
 (defun graphql--encode-argument (key value)
+  "Encode an argument KEY with value VALUE."
   (format "%s:%s" key (graphql--encode-argument-value value)))
 
 (defun graphql--encode-argument-value (value)
@@ -58,8 +63,7 @@ VALUE is expected to be one of the following:
 * a string
 * a vector of values (e.g., symbols)
 * a number
-* something encode-able by `graphql-encode'
-"
+* something encode-able by `graphql-encode'."
   (cond
    ((symbolp value)
     (symbol-name value))
@@ -107,6 +111,9 @@ parameter."
                                (nthcdr 2 spec))))
 
 (defun graphql--encode-parameter (name type &optional required default)
+  "Encode a GraphQL parameter with a NAME and TYPE.
+If REQUIRED is non-nil, mark the parameter as required.
+If DEFAULT is non-nil, is the default value of the parameter."
   (format "$%s:%s%s%s"
           (symbol-name name)
           (symbol-name type)
@@ -173,6 +180,12 @@ and the second is a 'clean' copy of G."
     (_ (mapcar #'graphql-simplify-response-edges data))))
 
 (defun graphql--genform-operation (args kind)
+  "Generate the Lisp form for an operation.
+ARGS is is a list ([NAME [PARAMETERS]] GRAPH) where NAME is the
+name of the operation, PARAMETERS are its parameters, and GRAPH
+is the form of the actual operation.
+
+KIND can be `query' or `mutation'."
   (pcase args
     (`(,name ,parameters ,graph)
      `(graphql-encode '(,kind :op-name ,name
@@ -186,16 +199,18 @@ and the second is a 'clean' copy of G."
     (`(,graph)
      `(graphql-encode '(,kind ,@graph)))
 
-    (_ (error "bad form"))))
+    (_ (error "Bad form"))))
 
 (defmacro graphql-query (&rest args)
   "Construct a Query object.
+ARGS is a listof the form described by `graphql--genform-operation'.
 
 \(fn [NAME] [(PARAMETER-SPEC...)] GRAPH)"
   (graphql--genform-operation args 'query))
 
 (defmacro graphql-mutation (&rest args)
   "Construct a Mutation object.
+ARGS is a listof the form described by `graphql--genform-operation'.
 
 \(fn [NAME] [(PARAMETER-SPEC...)] GRAPH)"
   (graphql--genform-operation args 'mutation))
