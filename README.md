@@ -98,7 +98,6 @@ query {
 
 ## Planned
 - `:as` keyword for [aliases][graphql-alias] (`graphql-encode`).
-- `$` qualifier for [variables][graphql-variable] (`graphql--encode-object`)
 - `...` qualifier for [fragments][graphql-fragment] and [inline fragments][graphql-ifragment] (`graphql--encode-object`)
 
 [graphql-alias]: http://graphql.org/learn/queries/#aliases
