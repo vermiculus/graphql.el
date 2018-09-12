@@ -16,7 +16,7 @@
          (package-buffer-info)))
       (with-temp-buffer
         (when (= 0 (call-process "git" nil t nil "describe" "--tags"))
-          (version-to-list (car (split-string (buffer-string) "-")))))))))
+          (version-to-list (car (split-string (string-trim (buffer-string)) "-")))))))))
 
 (ert-deftest encode-basic ()
   (should (string= (graphql-encode
