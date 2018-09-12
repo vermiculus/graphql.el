@@ -1,5 +1,8 @@
 # GraphQL.el
 
+[![MELPA Status](http://melpa.milkbox.net/packages/graphql-badge.svg)](http://melpa.milkbox.net/#/graphql)
+[![Build Status](https://travis-ci.org/vermiculus/graphql.el.svg?branch=master)](https://travis-ci.org/vermiculus/graphql.el)
+
 GraphQL.el provides a set of generic functions for interacting with GraphQL web services.
 
 See also the following resources:
