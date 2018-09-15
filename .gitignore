@@ -1,4 +1,3 @@
-.cask/
-.elpa/
-/emake.*
-/.elpa*
+*.elc
+/.emake/
+/emake.mk

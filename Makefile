@@ -6,6 +6,9 @@ PACKAGE_BASENAME      := graphql
 
 emake.mk: export EMAKE_SHA1 := $(EMAKE_SHA1)
 emake.mk:                       ## download the emake Makefile
+# we use yq to retrieve the before_install command.
+# upon expansion, that command will be run with this target.
+	rm -f emake.mk
 	$(shell yq r .travis.yml 'before_install[0]')
 
 include emake.mk
