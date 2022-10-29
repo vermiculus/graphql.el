@@ -1,3 +1,7 @@
+;; -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2017-2022  Free Software Foundation, Inc.
+
 (require 'subr-x)
 (require 'json)
 (require 'ghub nil t)

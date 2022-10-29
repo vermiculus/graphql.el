@@ -1,6 +1,6 @@
 ;;; graphql.el --- GraphQL utilities                 -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017  Sean Allred
+;; Copyright (C) 2017-2022  Free Software Foundation, Inc.
 
 ;; Author: Sean Allred <code@seanallred.com>
 ;; Keywords: hypermedia, tools, lisp
