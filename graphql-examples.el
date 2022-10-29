@@ -1,6 +1,6 @@
 (require 'subr-x)
 (require 'json)
-(require 'ghub)
+(require 'ghub nil t)
 (require 'graphql)
 
 ;;; The following functions create

@@ -58,7 +58,7 @@ SPEC is of the form..."
 VALUE is expected to be one of the following:
 
 * a symbol
-* a 'variable', i.e. \\='($ variableName)
+* a \"variable\", i.e. \\='($ variableName)
 * an object (as a list)
 * a string
 * a vector of values (e.g., symbols)
@@ -125,7 +125,7 @@ If DEFAULT is non-nil, is the default value of the parameter."
 (defun graphql--get-keys (g)
   "Get the keyword arguments from a graph G.
 Returns a list where the first element is a plist of arguments
-and the second is a 'clean' copy of G."
+and the second is a \"clean\" copy of G."
   (or (and (not (consp g))
            (list nil g))
       (let (graph keys)
@@ -181,7 +181,7 @@ and the second is a 'clean' copy of G."
 
 (defun graphql--genform-operation (args kind)
   "Generate the Lisp form for an operation.
-ARGS is is a list ([NAME [PARAMETERS]] GRAPH) where NAME is the
+ARGS is a list ([NAME [PARAMETERS]] GRAPH) where NAME is the
 name of the operation, PARAMETERS are its parameters, and GRAPH
 is the form of the actual operation.
 
