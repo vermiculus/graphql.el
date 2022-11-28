@@ -5,7 +5,7 @@
 ;; Author: Sean Allred <code@seanallred.com>
 ;; Keywords: hypermedia, tools, lisp
 ;; Homepage: https://github.com/vermiculus/graphql.el
-;; Package-Version: 0.1.1
+;; Package-Version: 0.1.2
 ;; Package-Requires: ((emacs "25"))
 
 ;; This program is free software; you can redistribute it and/or modify
