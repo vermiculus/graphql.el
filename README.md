@@ -36,10 +36,8 @@ in a Lispy DSL. Generally speaking, we represent fields as symbols and
 edges as nested lists with the edge name being the head of that list.
 For example,
 
-```emacs-lisp
-(graphql-query
- (myField1 myField2 (myEdges (edges (node myField3)))))
-```
+    (graphql-query
+     (myField1 myField2 (myEdges (edges (node myField3)))))
 
 will construct a query that retrieves `myField1`, `myField2`, and
 `myField3` for every node in `myEdges`. The query is returned as a
@@ -50,67 +48,57 @@ string without any unnecessary whitespace (i.e., formatting) added.
 Multiple edges can of course be followed. Here's an example using
 GitHub's API:
 
-```emacs-lisp
-(graphql-query
- ((viewer login)
-  (rateLimit limit cost remaining resetAt)))
-```
+    (graphql-query
+     ((viewer login)
+      (rateLimit limit cost remaining resetAt)))
 
 ## Passing Arguments
 
 Usually, queries need explicit arguments. We pass them in an alist set
 off by the `:arguments` keyword:
 
-``` emacs-lisp
-(graphql-query
- ((repository
-   :arguments ((owner . "github")
-               (name . ($ repo)))
-   (issues :arguments ((first . 20)
-                       (states . [OPEN CLOSED]))
-           (edges
-            (node number title url id))))))
-```
+    (graphql-query
+     ((repository
+       :arguments ((owner . "github")
+                   (name . ($ repo)))
+       (issues :arguments ((first . 20)
+                           (states . [OPEN CLOSED]))
+               (edges
+                (node number title url id))))))
 
 As you can see, strings, numbers, vectors, symbols, and variables can
 all be given as arguments. The above evaluates to the following
 (formatting added):
 
-``` graphql
-query {
-  repository (owner: "github", name: $repo) {
-    issues (first: 20, states: [OPEN, CLOSED]) {
-      edges {
-        node {
-          number title url id
+    query {
+      repository (owner: "github", name: $repo) {
+        issues (first: 20, states: [OPEN, CLOSED]) {
+          edges {
+            node {
+              number title url id
+            }
+          }
         }
       }
     }
-  }
-}
-```
 
 Objects as arguments work, too, though practical examples seem harder
 to come by:
 
-``` emacs-lisp
-(graphql-query
- ((object :arguments ((someVariable . ((someComplex . "object")
-                                       (with . ($ complexNeeds))))))))
-```
+    (graphql-query
+     ((object :arguments ((someVariable . ((someComplex . "object")
+                                           (with . ($ complexNeeds))))))))
 
 gives
 
-``` graphql
-query {
-  object (
-    someVariable: {
-      someComplex: "object",
-      with: $complexNeeds
+    query {
+      object (
+        someVariable: {
+          someComplex: "object",
+          with: $complexNeeds
+        }
+      )
     }
-  )
-}
-```
 
 ## Working with Responses
 
